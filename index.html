@@ -50,6 +50,20 @@
   }
 }
 
+/* CHI IN HOA DON, AN TIEU DE XEM TRUOC */
+@media print {
+  section.panel:has(> #receipt) > h2 {
+    display: none !important;
+  }
+
+  section.panel:has(> #receipt) {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
 </style></head><body><header><h1>TẠP HÓA TÍNH XUYÊN</h1><small>Phần mềm tính tiền - bản thử nghiệm</small></header><main class="wrap"><div class="notice">⚠️ Chỉ dùng để thử nghiệm. Sản phẩm và giá là ví dụ, chưa lưu hóa đơn, chưa trừ tồn kho, chưa đồng bộ hoặc bảo mật tài khoản.</div><section class="panel controls"><h2>1. Chọn hàng hóa</h2><label for="search">Tìm sản phẩm</label><input id="search" placeholder="Nhập tên sản phẩm..." oninput="drawProducts()"><div class="grid" id="products" style="margin-top:12px"></div></section><section class="panel controls"><h2>2. Hàng khách mua</h2><div id="cart"></div><div class="total"><span>Tổng cộng</span><span class="money" id="total">0đ</span></div><label for="customer">Tên khách hàng (không bắt buộc)</label><input id="customer" placeholder="Khách lẻ" oninput="drawReceipt()"><label for="payment">Hình thức thanh toán</label><select id="payment" onchange="toggleCash();drawReceipt()"><option value="Tiền mặt">Tiền mặt</option><option value="Chuyển khoản">Chuyển khoản</option></select><div id="cashArea"><label for="cash">Tiền khách đưa (đồng)</label><input id="cash" type="number" min="0" inputmode="numeric" placeholder="Ví dụ: 50000" oninput="drawCash()"><div class="total"><span>Tiền thối</span><span id="change" class="money">0đ</span></div></div><div class="actions"><button onclick="window.print()">🖨 In hóa đơn / Lưu PDF</button><button class="secondary" onclick="clearCart()">Xóa giỏ hàng</button></div><p class="muted">Nút in sử dụng hộp thoại in của trình duyệt. Có thể chọn máy in giấy thường hoặc lưu PDF.</p></section><section class="panel"><h2>3. Xem trước hóa đơn</h2><div id="receipt" class="receipt"></div></section></main><script>
 const catalog=[{id:1,name:'Mì Hảo Hảo',unit:'Gói',price:4500},{id:2,name:'Nước suối 500ml',unit:'Chai',price:5000},{id:3,name:'Sữa hộp 180ml',unit:'Hộp',price:8500},{id:4,name:'Đường 1kg',unit:'Gói',price:26000},{id:5,name:'Dầu ăn 1 lít',unit:'Chai',price:48000},{id:6,name:'Bánh Oreo',unit:'Gói',price:12000},{id:7,name:'Nước ngọt',unit:'Lon',price:10000},{id:8,name:'Cà phê gói',unit:'Gói',price:5000}];
 let cart={};const money=n=>Number(n||0).toLocaleString('vi-VN')+'đ';const total=()=>catalog.reduce((sum,p)=>sum+p.price*(cart[p.id]||0),0);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
