@@ -1,6 +1,55 @@
 <!doctype html>
 <html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tạp Hóa Tính Xuyên - Bản thử nghiệm</title><style>
 :root{font-family:Arial,sans-serif;color:#17251c;background:#f3f6f3}*{box-sizing:border-box}body{margin:0}.wrap{max-width:900px;margin:auto;padding:14px}header{background:#17633b;color:white;padding:17px;text-align:center}header h1{font-size:23px;margin:0 0 5px}header small{font-size:13px}.notice{background:#fff3cf;padding:10px;border-radius:9px;margin:12px 0;font-size:14px}.panel{background:white;border-radius:14px;padding:15px;margin:12px 0;box-shadow:0 1px 5px #0001}h2{font-size:20px;margin:0 0 12px}label{display:block;margin:8px 0 5px;font-weight:bold}input,select{font:inherit;width:100%;padding:12px;border:1px solid #aab5ae;border-radius:9px;min-height:46px}button{font:inherit;border:0;border-radius:10px;min-height:44px;padding:10px 14px;background:#17633b;color:white;cursor:pointer;font-weight:bold}button.secondary{background:#e4eee7;color:#19442c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{text-align:left;min-height:78px}.product span{display:block;font-size:13px;font-weight:normal;margin-top:5px}.line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border-bottom:1px solid #e5e8e5;padding:12px 0}.line small{color:#56665c}.qty{display:flex;align-items:center;gap:8px}.qty button{width:40px;padding:0}.total{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:22px;font-weight:bold;padding:15px 0}.actions{display:flex;gap:9px;flex-wrap:wrap}.actions button{flex:1}.empty{color:#637368}.receipt{background:white;border:1px solid #bbb;padding:15px;margin-top:12px;font-family:'Times New Roman',serif;color:black}.receipt h2{text-align:center}.receipt table{width:100%;border-collapse:collapse;font-size:12px}.receipt th,.receipt td{border:1px solid #777;padding:5px 3px}.receipt th:nth-child(1){width:28px}.receipt .right{text-align:right}.receipt p{font-size:13px}.receipt .sign{display:flex;justify-content:space-between;text-align:center;font-size:13px;margin-top:24px}.muted{font-size:12px;color:#667}.money{font-variant-numeric:tabular-nums}@media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}@media print{body{background:white}header,.notice,.controls,.actions,.muted{display:none!important}.wrap{padding:0}.panel{box-shadow:none;padding:0;margin:0}.receipt{border:0;margin:0;padding:0}#receipt{display:block!important}@page{size:A5 portrait;margin:10mm}}
+
+/* DINH DANG IN HOA DON A5 */
+@page {
+  size: A5 portrait;
+  margin: 8mm;
+}
+
+@media print {
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #receipt, .receipt {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    font-size: 11pt !important;
+  }
+
+  #receipt table, .receipt table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  #receipt th, #receipt td,
+  .receipt th, .receipt td {
+    font-size: 10pt !important;
+    padding: 5px 4px !important;
+    border: 1px solid #555 !important;
+  }
+
+  button, input, select {
+    display: none !important;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  tr {
+    break-inside: avoid;
+  }
+}
+
 </style></head><body><header><h1>TẠP HÓA TÍNH XUYÊN</h1><small>Phần mềm tính tiền - bản thử nghiệm</small></header><main class="wrap"><div class="notice">⚠️ Chỉ dùng để thử nghiệm. Sản phẩm và giá là ví dụ, chưa lưu hóa đơn, chưa trừ tồn kho, chưa đồng bộ hoặc bảo mật tài khoản.</div><section class="panel controls"><h2>1. Chọn hàng hóa</h2><label for="search">Tìm sản phẩm</label><input id="search" placeholder="Nhập tên sản phẩm..." oninput="drawProducts()"><div class="grid" id="products" style="margin-top:12px"></div></section><section class="panel controls"><h2>2. Hàng khách mua</h2><div id="cart"></div><div class="total"><span>Tổng cộng</span><span class="money" id="total">0đ</span></div><label for="customer">Tên khách hàng (không bắt buộc)</label><input id="customer" placeholder="Khách lẻ" oninput="drawReceipt()"><label for="payment">Hình thức thanh toán</label><select id="payment" onchange="toggleCash();drawReceipt()"><option value="Tiền mặt">Tiền mặt</option><option value="Chuyển khoản">Chuyển khoản</option></select><div id="cashArea"><label for="cash">Tiền khách đưa (đồng)</label><input id="cash" type="number" min="0" inputmode="numeric" placeholder="Ví dụ: 50000" oninput="drawCash()"><div class="total"><span>Tiền thối</span><span id="change" class="money">0đ</span></div></div><div class="actions"><button onclick="window.print()">🖨 In hóa đơn / Lưu PDF</button><button class="secondary" onclick="clearCart()">Xóa giỏ hàng</button></div><p class="muted">Nút in sử dụng hộp thoại in của trình duyệt. Có thể chọn máy in giấy thường hoặc lưu PDF.</p></section><section class="panel"><h2>3. Xem trước hóa đơn</h2><div id="receipt" class="receipt"></div></section></main><script>
 const catalog=[{id:1,name:'Mì Hảo Hảo',unit:'Gói',price:4500},{id:2,name:'Nước suối 500ml',unit:'Chai',price:5000},{id:3,name:'Sữa hộp 180ml',unit:'Hộp',price:8500},{id:4,name:'Đường 1kg',unit:'Gói',price:26000},{id:5,name:'Dầu ăn 1 lít',unit:'Chai',price:48000},{id:6,name:'Bánh Oreo',unit:'Gói',price:12000},{id:7,name:'Nước ngọt',unit:'Lon',price:10000},{id:8,name:'Cà phê gói',unit:'Gói',price:5000}];
 let cart={};const money=n=>Number(n||0).toLocaleString('vi-VN')+'đ';const total=()=>catalog.reduce((sum,p)=>sum+p.price*(cart[p.id]||0),0);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
