@@ -74,7 +74,7 @@
     SUPABASE_KEY
   );
 
-  async function testLogin() async function testProducts() {
+  async function testProducts() {
   const { data: { user }, error: authError } =
     await db.auth.getUser();
 
@@ -97,26 +97,26 @@
     'KẾT NỐI THÀNH CÔNG!\n' +
     'Số sản phẩm tìm thấy: ' + data.length
   );
-} {
-    const email = prompt('Nhập email tài khoản sếp:');
-    if (!email) return;
+}
+  async function testLogin() {
+  const email = prompt('Nhập email đăng nhập:');
+  if (!email) return;
 
-    const password = prompt('Nhập mật khẩu:');
-    if (!password) return;
+  const password = prompt('Nhập mật khẩu:');
+  if (!password) return;
 
-    const { data, error } = await db.auth.signInWithPassword({
-      email,
-      password
-    });
+  const { error } = await db.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
 
-    if (error) {
-      alert('Đăng nhập thất bại: ' + error.message);
-      return;
-    }
-
-    alert('Đăng nhập thành công!');
-    console.log('User ID:', data.user.id);
+  if (error) {
+    alert('Đăng nhập thất bại: ' + error.message);
+    return;
   }
+
+  alert('Đăng nhập thành công!');
+}
 </script>
 
 <button onclick="testLogin()"
